@@ -22,13 +22,13 @@ public class GuestbookRepositoryTests {
     private GuestbookRepository guestbookRepository;
 
     @Test
-    public void insertDummies(){
+    public void insertDummies() {
 
-        IntStream.rangeClosed(1,300).forEach(i -> {
+        IntStream.rangeClosed(1, 300).forEach(i -> {
 
             Guestbook guestbook = Guestbook.builder()
                     .title("Title...." + i)
-                    .content("Content..." +i)
+                    .content("Content..." + i)
                     .writer("user" + (i % 10))
                     .build();
             System.out.println(guestbookRepository.save(guestbook));
@@ -39,7 +39,7 @@ public class GuestbookRepositoryTests {
     public void updateTest() {
         Optional<Guestbook> result = guestbookRepository.findById(300L);
 
-        if(result.isPresent()){
+        if (result.isPresent()) {
 
             Guestbook guestbook = result.get();
 
@@ -65,7 +65,23 @@ public class GuestbookRepositoryTests {
         result.stream().forEach(guestbook -> {
             System.out.println(guestbook);
         });
-
     }
 
+    @Test
+    public void testQuery2() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("gno").descending());
+        QGuestbook qGuestbook = QGuestbook.guestbook;
+        String keyword = "1";
+        BooleanBuilder builder = new BooleanBuilder();
+        BooleanExpression exTitle = qGuestbook.title.contains(keyword);
+        BooleanExpression exContent = qGuestbook.content.contains(keyword);
+        BooleanExpression exAll = exTitle.or(exContent);
+        builder.and(exAll);
+        builder.and(qGuestbook.gno.gt(550L));
+        Page<Guestbook> result = guestbookRepository.findAll(builder, pageable);
+
+        result.stream().forEach(guestbook -> {
+            System.out.println(guestbook);
+        });
+    }
 }

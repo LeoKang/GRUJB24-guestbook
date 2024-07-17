@@ -22,11 +22,13 @@ public class GuestbookRepositoryTests {
     private GuestbookRepository guestbookRepository;
 
     @Test
-    public void insertDummies() {
-        IntStream.rangeClosed(1, 300).forEach(i -> {
+    public void insertDummies(){
+
+        IntStream.rangeClosed(1,300).forEach(i -> {
+
             Guestbook guestbook = Guestbook.builder()
                     .title("Title...." + i)
-                    .content("Content..." + i)
+                    .content("Content..." +i)
                     .writer("user" + (i % 10))
                     .build();
             System.out.println(guestbookRepository.save(guestbook));
@@ -37,10 +39,11 @@ public class GuestbookRepositoryTests {
     public void updateTest() {
         Optional<Guestbook> result = guestbookRepository.findById(300L);
 
-        if (result.isPresent()) {
+        if(result.isPresent()){
+
             Guestbook guestbook = result.get();
 
-            guestbook.changeTitle("Changed Title...");
+            guestbook.changeTitle("Changed Title....");
             guestbook.changeContent("Changed Content...");
 
             guestbookRepository.save(guestbook);
@@ -49,6 +52,7 @@ public class GuestbookRepositoryTests {
 
     @Test
     public void testQuery1() {
+
         Pageable pageable = PageRequest.of(0, 10, Sort.by("gno").descending());
 
         QGuestbook qGuestbook = QGuestbook.guestbook;
@@ -57,8 +61,11 @@ public class GuestbookRepositoryTests {
         BooleanExpression expression = qGuestbook.title.contains(keyword);
         builder.and(expression);
         Page<Guestbook> result = guestbookRepository.findAll(builder, pageable);
+
         result.stream().forEach(guestbook -> {
             System.out.println(guestbook);
         });
+
     }
+
 }

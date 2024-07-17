@@ -3,6 +3,7 @@ package org.zerock.guestbook.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Getter
 @Builder

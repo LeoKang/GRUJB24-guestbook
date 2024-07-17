@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.guestbook.dto.GuestbookDTO;
 import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
@@ -24,7 +26,8 @@ public class GuestbookServiceImpl implements GuestbookService {
 
     @Override
     public Long register(GuestbookDTO dto) {
-        log.info("DTO----------------------");
+
+        log.info("DTO------------------------");
         log.info(dto);
 
         Guestbook entity = dtoToEntity(dto);
@@ -48,5 +51,23 @@ public class GuestbookServiceImpl implements GuestbookService {
         Optional<Guestbook> result = repository.findById(gno);
 
         return result.isPresent() ? entityToDto(result.get()) : null;
+    }
+
+    @Override
+    public void remove(Long gno) {
+        repository.deleteById(gno);
+    }
+
+    @Override
+    public void modify(GuestbookDTO dto) {
+        Optional<Guestbook> result = repository.findById(dto.getGno());
+
+        if (result.isPresent()) {
+            Guestbook entity = result.get();
+            entity.changeTitle(dto.getTitle());
+            entity.changeContent(dto.getContent());
+
+            repository.save(entity);
+        }
     }
 }

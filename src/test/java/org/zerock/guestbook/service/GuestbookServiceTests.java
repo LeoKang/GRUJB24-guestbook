@@ -53,7 +53,7 @@ public class GuestbookServiceTests {
                 .page(1)
                 .size(10)
                 .type("tc")
-                .keyword("290")
+                .keyword("Title")
                 .build();
 
         PageResultDTO<GuestbookDTO, Guestbook> resultDTO = service.getList(pageRequestDTO);
